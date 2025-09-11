@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:car_monitor/components/car_info_list.dart';
+import 'package:car_monitor/features/home/presentation/views/widgets/car_info_list.dart';
 import 'package:car_monitor/core/theme/color_styles.dart';
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
