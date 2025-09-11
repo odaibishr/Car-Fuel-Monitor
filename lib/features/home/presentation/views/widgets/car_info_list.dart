@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:car_monitor/features/home/presentation/views/widgets/fuel_liters_card.dart';
+import 'package:car_monitor/features/home/presentation/views/widgets/fuel_price_card.dart';
 import 'package:car_monitor/features/home/presentation/views/widgets/last_refill_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -22,7 +23,6 @@ class CarInfoList extends StatelessWidget {
 
   final double nearestDistance;
 
-  /// Optional: Last refill liters (if available)
   final double? lastRefillLiters;
 
   final num? fuelPricePerLiter;
@@ -56,35 +56,6 @@ class CarInfoList extends StatelessWidget {
 
 
 
-class FuelPriceCard extends StatelessWidget {
-  const FuelPriceCard({super.key, this.pricePerLiter});
-  final num? pricePerLiter;
-
-  @override
-  Widget build(BuildContext context) {
-    final String priceText = pricePerLiter != null
-        ? pricePerLiter is int
-            ? pricePerLiter.toString()
-            : (pricePerLiter as num).toStringAsFixed(2)
-        : "—";
-    return CartInfo(
-      text: Text(
-        "سعر اللتر $priceText ريال",
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      image: const Image(
-        image: AssetImage(Assets.assetsAssetsFuelMoney),
-        height: 28,
-        width: 28,
-        semanticLabel: 'Fuel price icon',
-      ),
-    );
-  }
-}
 
 class NearestStationCard extends StatelessWidget {
   const NearestStationCard({super.key, required this.distanceKm});
