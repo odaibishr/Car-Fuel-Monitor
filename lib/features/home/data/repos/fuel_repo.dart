@@ -4,5 +4,5 @@ import 'package:dartz/dartz.dart';
 import '../model/fuel_model.dart';
 
 abstract class FuelRepo {
-  Future<Either<Failure, FuelModel>> getFuelData(int fieldNumber);
+  Future<Either<Failure, FuelModel>> getFuelData();
 }

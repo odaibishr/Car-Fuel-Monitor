@@ -1,3 +1,4 @@
+
 import 'package:car_monitor/core/api/dio_consumer.dart';
 import 'package:car_monitor/core/api/end_points.dart';
 import 'package:car_monitor/core/errors/failure.dart';
@@ -11,12 +12,18 @@ class FuelRepoImpl implements FuelRepo {
   FuelRepoImpl(this.dioConsumer);
 
   @override
-  Future<Either<Failure, FuelModel>> getFuelData(int fieldNumber) async {
+  Future<Either<Failure, FuelModel>> getFuelData() async {
     try {
-      var response = await dioConsumer
-          .get("$fieldNumber.json?api_key=${EndPoints.apiKey}&results=2");
+      final response = await dioConsumer.get(
+        "feeds.json?api_key=${EndPoints.apiKey}&results=2",
+      );
 
-      return right(FuelModel.fromJson(response));
+      if (response is Map<String, dynamic>) {
+        return right(FuelModel.fromJson(response["feeds"][0]));
+      } else {
+        return left(
+            Failure('Unexpected response type: "${response.runtimeType}"'));
+      }
     } catch (e) {
       return left(Failure(e.toString()));
     }

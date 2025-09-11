@@ -1,5 +1,5 @@
+import 'package:car_monitor/features/home/presentation/views/home_screen.dart';
 import 'package:car_monitor/features/splash/presentation/views/splash_screen.dart';
-// import 'package:car_monitor/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoute {
@@ -11,9 +11,9 @@ class AppRoute {
       path: splashRoute,
       builder: (context, state) => const SplashScreen(),
     ),
-    // GoRoute(
-    //   path: homeRoute,
-    //   builder: (context, state) => const HomeScreen(),
-    // ),
+    GoRoute(
+      path: homeRoute,
+      builder: (context, state) => const HomeScreen(),
+    ),
   ]);
 }

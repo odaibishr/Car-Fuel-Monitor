@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:car_monitor/core/utils/app_route.dart';
 import 'package:car_monitor/features/splash/presentation/widgets/text_splsh_info.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../car_assets.dart';
 
@@ -17,10 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const BottomNavBar()),
-      // );
+      GoRouter.of(context).push(AppRoute.homeRoute);
     });
   }
 
@@ -64,4 +63,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
