@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "731298787135",
+    "project_id": "fuel-wallet-12224",
+    "storage_bucket": "fuel-wallet-12224.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731298787135:android:ace56032b7f8ff6691ad8a",
+        "android_client_info": {
+          "package_name": "com.example.car_monitor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkFAs7t8RNseMaFe7udC3BcpvGBpBK16w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
