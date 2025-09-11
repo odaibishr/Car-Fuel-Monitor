@@ -1,6 +1,7 @@
 // imports
 import 'package:car_monitor/core/api/api_consumer.dart';
 import 'package:car_monitor/core/api/end_points.dart';
+import 'package:car_monitor/core/errors/exceptions.dart';
 import 'package:dio/dio.dart';
 
 class DioConsumer extends ApiConsumer {

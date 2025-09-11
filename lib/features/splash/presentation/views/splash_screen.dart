@@ -1,11 +1,9 @@
 import 'dart:async';
 
-import 'package:car_monitor/core/widgets/custom_loader.dart';
 import 'package:car_monitor/features/splash/presentation/widgets/text_splsh_info.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../car_assets.dart';
-import '../../../../components/bottom_nav_bar.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
