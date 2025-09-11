@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../styles/color_styles.dart';
+import '../theme/color_styles.dart';
 
 class CustomLoader extends StatelessWidget {
   const CustomLoader({

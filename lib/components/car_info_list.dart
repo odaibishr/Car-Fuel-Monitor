@@ -5,7 +5,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:car_monitor/components/cart_info.dart';
 
 import '../car_assets.dart';
-import '../styles/font_styles.dart';
+import '../core/theme/font_styles.dart';
 
 // ignore: must_be_immutable
 class CarInfoList extends StatelessWidget {

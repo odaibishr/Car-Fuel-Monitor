@@ -1,10 +1,10 @@
-import 'package:car_monitor/screens/splash_screen.dart';
+import 'package:car_monitor/core/utils/app_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'firebase_options.dart';
-import 'styles/color_styles.dart';
+import 'core/theme/color_styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +19,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
+      routerConfig: AppRoute.router,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         GlobalCupertinoLocalizations.delegate,
@@ -35,7 +36,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: ColorStyles.primaryColor),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
     );
   }
 }

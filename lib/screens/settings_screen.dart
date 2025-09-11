@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:car_monitor/components/custom_loader.dart';
+import 'package:car_monitor/core/widgets/custom_loader.dart';
 import 'package:car_monitor/components/custom_text_feild.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../styles/color_styles.dart';
+import '../core/theme/color_styles.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../components/notification_card.dart';
-import '../styles/color_styles.dart';
+import '../core/theme/color_styles.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});

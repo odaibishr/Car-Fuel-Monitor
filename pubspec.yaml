@@ -52,6 +52,9 @@ dependencies:
   location:
   open_route_service: ^1.2.7
   flutter_launcher_icons: ^0.14.3
+  go_router: ^16.2.1
+  dio: ^5.9.0
+  bloc: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -77,7 +80,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/
+    - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -94,18 +97,18 @@ flutter:
   fonts:
     - family: Cairo
       fonts:
-        - asset: lib/assets/fonts/Cairo-Regular.ttf
+        - asset: assets/fonts/Cairo-Regular.ttf
           weight: 400
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
-        - asset: lib/assets/fonts/Cairo-Bold.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
           weight: 600
-        - asset: lib/assets/fonts/Cairo-SemiBold.ttf
+        - asset: assets/fonts/Cairo-SemiBold.ttf
           weight: 700
-        - asset: lib/assets/fonts/Cairo-Medium.ttf
+        - asset: assets/fonts/Cairo-Medium.ttf
           weight: 500
   #
   # For details regarding fonts from package dependencies,
@@ -113,11 +116,11 @@ flutter:
 
 
 flutter_assets:
-  assets_path: lib/assets/
+  assets_path: assets/
   output_path: lib
   filename: car_assets.dart
 
 flutter_icons:
   android: true
   ios: true
-  image_path: "lib/assets/logo.jpg"
+  image_path: "assets/logo.jpg"

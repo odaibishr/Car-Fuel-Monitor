@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/cupertino.dart';
 import '../components/profile_menu.dart';
-import '../styles/color_styles.dart';
+import '../core/theme/color_styles.dart';
 import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {

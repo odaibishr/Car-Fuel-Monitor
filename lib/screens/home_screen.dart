@@ -4,11 +4,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:car_monitor/components/car_info_list.dart';
-import 'package:car_monitor/styles/color_styles.dart';
+import 'package:car_monitor/core/theme/color_styles.dart';
 import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../styles/font_styles.dart';
+import '../core/theme/font_styles.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.nearestDistance});

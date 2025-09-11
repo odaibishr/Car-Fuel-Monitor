@@ -6,7 +6,7 @@ import '../car_assets.dart';
 import '../screens/home_screen.dart';
 import '../screens/notification_screen.dart';
 import '../screens/porfile_screen.dart';
-import '../styles/color_styles.dart';
+import '../core/theme/color_styles.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});

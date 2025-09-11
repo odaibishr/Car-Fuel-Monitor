@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'package:car_monitor/components/custom_loader.dart';
-import 'package:car_monitor/styles/color_styles.dart';
+import 'package:car_monitor/core/widgets/custom_loader.dart';
+import 'package:car_monitor/core/theme/color_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
