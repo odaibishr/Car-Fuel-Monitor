@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:car_monitor/core/api/dio_consumer.dart';
 import 'package:car_monitor/core/errors/failure.dart';
 import 'package:car_monitor/features/map/data/models/fuel_station.dart';
@@ -26,30 +28,27 @@ class MapRepoImpl implements MapRepo {
 
   @override
   Future<Either<Failure, List<FuelStation>>> getNearbyFuelStations(
-      LatLng userLocation,
+      LocationData userLocation,
       {double radiusMeters = 5000}) async {
     try {
       final lat = userLocation.latitude;
       final lon = userLocation.longitude;
+      log("lat: $lat, lon: $lon");
       final overpassUrl =
           "https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=fuel](around:$radiusMeters,$lat,$lon);out;";
-      final response = await _dioConsumer.get(overpassUrl);
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final fuelStations = data['elements'] as List;
-        return right(fuelStations
-            .where((e) => e.containsKey('lat') && e.containsKey('lon'))
-            .map<FuelStation>((e) => FuelStation(
-                  name: e['tags']?['name'] ?? 'محطة وقود غير معروفة',
-                  latitude: (e['lat'] as num).toDouble(),
-                  longitude: (e['lon'] as num).toDouble(),
-                  address: e['tags']?['addr:street'] ?? 'غير متوفر',
-                ))
-            .toList());
-      } else {
-        return left(Failure('Failed to fetch fuel stations'));
-      }
+      // DioConsumer.get returns the response body (decoded data), not a Response
+      final data = await _dioConsumer.get(overpassUrl) as Map<String, dynamic>;
+      final fuelStations = data['elements'] as List;
+      return right(fuelStations
+          .where((e) => e.containsKey('lat') && e.containsKey('lon'))
+          .map<FuelStation>((e) => FuelStation(
+                name: e['tags']?['name'] ?? 'محطة وقود غير معروفة',
+                latitude: (e['lat'] as num).toDouble(),
+                longitude: (e['lon'] as num).toDouble(),
+                address: e['tags']?['addr:street'] ?? 'غير متوفر',
+              ))
+          .toList());
     } catch (e) {
       return left(Failure(e.toString()));
     }
@@ -58,14 +57,16 @@ class MapRepoImpl implements MapRepo {
   @override
   Future<Either<Failure, RoutePath>> getRoute(
       {required LatLng start, required LatLng destination}) async {
-    final url = Uri.parse(
-        'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}');
-    final response = await _dioConsumer.get(url.toString());
-    if (response.statusCode != 200) {
-      return left(Failure('Failed to fetch route'));
+    try {
+      final url = Uri.parse(
+          'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}');
+      // DioConsumer.get returns the response body (decoded data)
+      final data =
+          await _dioConsumer.get(url.toString()) as Map<String, dynamic>;
+      return right(RoutePath.fromJson(data));
+    } catch (e) {
+      return left(Failure(e.toString()));
     }
-    final data = response.data;
-    return right(RoutePath.fromJson(data));
   }
 
   @override

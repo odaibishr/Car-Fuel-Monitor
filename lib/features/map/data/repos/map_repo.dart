@@ -10,7 +10,7 @@ abstract class MapRepo {
   Stream<Either<Failure, LocationData>> locationStream();
 
   Future<Either<Failure, List<FuelStation>>> getNearbyFuelStations(
-    LatLng userLocation, {
+    LocationData userLocation, {
     double radiusMeters = 5000,
   });
 
