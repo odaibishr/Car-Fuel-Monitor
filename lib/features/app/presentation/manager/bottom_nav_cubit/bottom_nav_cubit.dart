@@ -14,7 +14,7 @@ class BottomNavCubit extends Cubit<BottomNavState> {
     pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
+      curve: Curves.fastEaseInToSlowEaseOut,
     );
   }
 
