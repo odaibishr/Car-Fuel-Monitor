@@ -1,11 +1,13 @@
 import 'package:car_monitor/core/api/dio_consumer.dart';
 import 'package:car_monitor/core/utils/app_route.dart';
+import 'package:car_monitor/features/app/presentation/manager/bottom_nav_cubit/bottom_nav_cubit.dart';
 import 'package:car_monitor/features/home/data/repos/fuel_repo_impl.dart';
 import 'package:car_monitor/features/home/presentation/manager/fuel_cubit/fuel_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'firebase_options.dart';
@@ -16,6 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -27,7 +30,11 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => FuelCubit(FuelRepoImpl(DioConsumer(dio: Dio())))..getFuelData(),
+          create: (context) =>
+              FuelCubit(FuelRepoImpl(DioConsumer(dio: Dio())))..getFuelData(),
+        ),
+        BlocProvider(
+          create: (context) => BottomNavCubit(),
         ),
       ],
       child: MaterialApp.router(

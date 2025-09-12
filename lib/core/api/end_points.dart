@@ -1,7 +1,9 @@
-class EndPoints {
-  static const String channelId = "2831038";
-  static const String apiKey = "JNMQSSFLEFF6MJ6X";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-  static const String baserUrl =
+class EndPoints {
+  static  String channelId = dotenv.env['THINGSPEAK_CHANNEL_ID']!;
+  static String apiKey = dotenv.env['THINGSPEAK_API_KEY']!;
+
+  static  String baserUrl =
       "https://api.thingspeak.com/channels/$channelId/";
 }

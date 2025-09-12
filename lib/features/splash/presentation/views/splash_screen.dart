@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      GoRouter.of(context).push(AppRoute.homeRoute);
+      GoRouter.of(context).push(AppRoute.bottomNavRoute);
     });
   }
 
