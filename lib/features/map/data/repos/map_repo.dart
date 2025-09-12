@@ -7,7 +7,7 @@ import 'package:location/location.dart';
 
 abstract class MapRepo {
   Future<Either<Failure, LocationData>> getCurrentLocation();
-  Future<Either<Failure, LocationData>> locationStream();
+  Stream<Either<Failure, LocationData>> locationStream();
 
   Future<Either<Failure, List<FuelStation>>> getNearbyFuelStations(
     LatLng userLocation, {
