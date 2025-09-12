@@ -13,8 +13,8 @@ class CarInfoList extends StatelessWidget {
     super.key,
     required this.fuelLetters,
     required this.nearestDistance,
-    this.lastRefillLiters,
-    this.fuelPricePerLiter,
+    this.lastRefillLiters = 15,
+    this.fuelPricePerLiter = 450,
   });
 
   final double fuelLetters;
