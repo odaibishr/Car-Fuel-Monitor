@@ -1,6 +1,6 @@
 import 'package:car_monitor/features/app/presentation/manager/bottom_nav_cubit/bottom_nav_cubit.dart';
 import 'package:car_monitor/features/home/presentation/views/home_screen.dart';
-import 'package:car_monitor/screens/map_screen.dart';
+import 'package:car_monitor/features/map/presentation/views/map_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,8 +32,8 @@ class BottomNavBar extends StatelessWidget {
               const HomeScreen(),
               const NotificationScreen(),
               MapScreen(
-                  updateDistance:
-                      context.read<BottomNavCubit>().updateNearestDistance),
+                updateDistance: (double p1) {},
+              ),
               const ProfileScreen(),
             ],
           ),

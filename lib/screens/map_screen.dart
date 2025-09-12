@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:car_monitor/core/widgets/custom_loader.dart';
 import 'package:car_monitor/core/theme/color_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
@@ -23,8 +24,7 @@ class _MapScreenState extends State<MapScreen> {
   List<LatLng> routePoints = [];
   List<Marker> markers = [];
   StreamSubscription<LocationData>? _locationSubscription;
-  final String orsApiKey =
-      '5b3ce3597851110001cf624848d6876fe8824e7699f98a83b94738bf';
+  final String orsApiKey = dotenv.env["OPEN_STREET_MAP_API_KEY"]!;
 
   List<Map<String, dynamic>> fuelStations = [];
 

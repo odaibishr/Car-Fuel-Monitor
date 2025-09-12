@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'firebase_options.dart';
 import 'core/theme/color_styles.dart';
+import 'injection_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   dotenv.load(fileName: ".env");
+  di.init();
   runApp(const MyApp());
 }
 
@@ -36,9 +38,15 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => BottomNavCubit(),
         ),
+        // BlocProvider(
+        //     create: (context) => MapCubit(
+        //         mapRepository: di.getIt<MapRepository>(),
+        //         updateDistance: (double distance) {
+        //           log('Distance to nearest station: $distance km');
+        //         })),
       ],
       child: MaterialApp.router(
-        title: 'Flutter Demo',
+        title: 'Car Fuel Monitor',
         routerConfig: AppRoute.router,
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [

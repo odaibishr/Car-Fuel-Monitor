@@ -1,75 +1,69 @@
-import 'package:car_monitor/core/api/dio_consumer.dart';
-import 'package:car_monitor/core/errors/failure.dart';
 import 'package:car_monitor/features/map/data/models/fuel_station.dart';
 import 'package:car_monitor/features/map/data/models/route_path.dart';
 import 'package:car_monitor/features/map/data/repos/map_repo.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:latlong2/latlong.dart';
 
-class MapRepoImpl implements MapRepo {
+class MapRepositoryImpl implements MapRepository {
   final Location _location = Location();
-  final DioConsumer _dioConsumer;
-  final String orsApiKey = dotenv.env['OPEN_STREET_MAP_API_KEY']!;
+  final String orsApiKey = dotenv.env["OPEN_STREET_MAP_API_KEY"]!;
 
-  MapRepoImpl(this._dioConsumer);
   @override
-  Future<Either<Failure, LocationData>> getCurrentLocation() async {
-    try {
-      final locationData = await _location.getLocation();
-      return right(locationData);
-    } catch (e) {
-      return left(Failure(e.toString()));
-    }
+  Future<LocationData> getCurrentLocation() async {
+    return await _location.getLocation();
   }
 
   @override
-  Future<Either<Failure, List<FuelStation>>> getNearbyFuelStations(
-      LatLng userLocation,
-      {double radiusMeters = 5000}) async {
-    try {
-      final lat = userLocation.latitude;
-      final lon = userLocation.longitude;
-      final overpassUrl =
-          "https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=fuel](around:$radiusMeters,$lat,$lon);out;";
-      final response = await _dioConsumer.get(overpassUrl);
+  Stream<LocationData> listenToLocationChanges() {
+    return _location.onLocationChanged;
+  }
 
+  @override
+  Future<List<FuelStationModel>> fetchNearbyFuelStations(
+      double lat, double lon, double radius) async {
+    final overpassUrl =
+        "https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=fuel](around:$radius,$lat,$lon);out;";
+
+    try {
+      final response = await http.get(Uri.parse(overpassUrl));
       if (response.statusCode == 200) {
-        final data = response.data;
-        final fuelStations = data['elements'] as List;
-        return right(fuelStations
-            .where((e) => e.containsKey('lat') && e.containsKey('lon'))
-            .map<FuelStation>((e) => FuelStation(
-                  name: e['tags']?['name'] ?? 'محطة وقود غير معروفة',
-                  latitude: (e['lat'] as num).toDouble(),
-                  longitude: (e['lon'] as num).toDouble(),
-                  address: e['tags']?['addr:street'] ?? 'غير متوفر',
+        final data = json.decode(response.body);
+        return (data['elements'] as List)
+            .where((element) =>
+                element.containsKey('lat') && element.containsKey('lon'))
+            .map((element) => FuelStationModel.fromJson(element))
+            .map((model) => FuelStationModel(
+                  name: model.name,
+                  latitude: model.latitude,
+                  longitude: model.longitude,
+                  address: model.address,
                 ))
-            .toList());
+            .toList();
       } else {
-        return left(Failure('Failed to fetch fuel stations'));
+        throw Exception(
+            "Failed to fetch fuel stations: ${response.statusCode}");
       }
     } catch (e) {
-      return left(Failure(e.toString()));
+      throw Exception("Error fetching fuel stations: $e");
     }
   }
 
   @override
-  Future<Either<Failure, RoutePath>> getRoute(
-      {required LatLng start, required LatLng destination}) async {
-    final url = Uri.parse(
-        'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}');
-    final response = await _dioConsumer.get(url.toString());
-    if (response.statusCode != 200) {
-      return left(Failure('Failed to fetch route'));
-    }
-    final data = response.data;
-    return right(RoutePath.fromJson(data));
-  }
+  Future<RouteResponseModel> getRoute(LatLng start, LatLng destination) async {
+    final response = await http.get(
+      Uri.parse(
+          'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}'),
+    );
 
-  @override
-  Stream<Either<Failure, LocationData>> locationStream() {
-    return _location.onLocationChanged.map((location) => right(location));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final routeModel = RouteResponseModel.fromJson(data);
+      return RouteResponseModel(points: routeModel.points);
+    } else {
+      throw Exception('Failed to fetch route: ${response.statusCode}');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:car_monitor/core/api/dio_consumer.dart';
 import 'package:car_monitor/core/api/end_points.dart';
@@ -17,7 +18,7 @@ class FuelRepoImpl implements FuelRepo {
       final response = await dioConsumer.get(
         "feeds.json?api_key=${EndPoints.apiKey}&results=2",
       );
-
+      log(response.toString());
       if (response is Map<String, dynamic>) {
         return right(FuelModel.fromJson(response["feeds"][0]));
       } else {
