@@ -25,7 +25,6 @@ class MapScreen extends StatelessWidget {
       ),
       body: BlocProvider<MapCubit>(
         create: (context) {
-          
           return MapCubit(
             mapRepository: di.getIt<MapRepository>(),
             updateDistance: updateDistance,

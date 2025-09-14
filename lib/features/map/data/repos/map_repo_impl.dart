@@ -1,15 +1,18 @@
+import 'package:car_monitor/core/api/dio_consumer.dart';
 import 'package:car_monitor/features/map/data/models/fuel_station.dart';
 import 'package:car_monitor/features/map/data/models/route_path.dart';
 import 'package:car_monitor/features/map/data/repos/map_repo.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:location/location.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:latlong2/latlong.dart';
 
 class MapRepositoryImpl implements MapRepository {
   final Location _location = Location();
+  final DioConsumer dioConsumer;
   final String orsApiKey = dotenv.env["OPEN_STREET_MAP_API_KEY"]!;
+
+  MapRepositoryImpl(this.dioConsumer);
 
   @override
   Future<LocationData> getCurrentLocation() async {
@@ -28,7 +31,7 @@ class MapRepositoryImpl implements MapRepository {
         "https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=fuel](around:$radius,$lat,$lon);out;";
 
     try {
-      final response = await http.get(Uri.parse(overpassUrl));
+      final response = await dioConsumer.get(overpassUrl);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return (data['elements'] as List)
@@ -53,9 +56,8 @@ class MapRepositoryImpl implements MapRepository {
 
   @override
   Future<RouteResponseModel> getRoute(LatLng start, LatLng destination) async {
-    final response = await http.get(
-      Uri.parse(
-          'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}'),
+    final response = await dioConsumer.get(
+      'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}',
     );
 
     if (response.statusCode == 200) {
