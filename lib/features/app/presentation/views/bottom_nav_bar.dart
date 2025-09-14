@@ -28,6 +28,7 @@ class BottomNavBar extends StatelessWidget {
           body: PageView(
             controller: context.read<BottomNavCubit>().pageController,
             physics: const NeverScrollableScrollPhysics(),
+<<<<<<< HEAD
             children: [
               const HomeScreen(),
               const NotificationScreen(),
@@ -35,6 +36,13 @@ class BottomNavBar extends StatelessWidget {
                 updateDistance: (double p1) {},
               ),
               const ProfileScreen(),
+=======
+            children: const [
+              HomeScreen(),
+              NotificationScreen(),
+              MapScreen(),
+              ProfileScreen(),
+>>>>>>> f6b0278cc2da0d80fd33ddb76eae8343a9fdd8a4
             ],
           ),
           bottomNavigationBar: BottomAppBar(
