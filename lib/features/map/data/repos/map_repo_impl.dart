@@ -1,8 +1,9 @@
-
 import 'package:car_monitor/core/api/dio_consumer.dart';
+import 'package:car_monitor/core/errors/failure.dart';
 import 'package:car_monitor/features/map/data/models/fuel_station.dart';
 import 'package:car_monitor/features/map/data/models/route_path.dart';
 import 'package:car_monitor/features/map/data/repos/map_repo.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:location/location.dart';
 import 'dart:convert';
@@ -16,17 +17,22 @@ class MapRepositoryImpl implements MapRepository {
   MapRepositoryImpl(this.dioConsumer);
 
   @override
-  Future<LocationData> getCurrentLocation() async {
-    return await _location.getLocation();
+  Future<Either<Failure, LocationData>> getCurrentLocation() async {
+    try {
+      final location = await _location.getLocation();
+      return Right(location);
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
   }
 
   @override
   Stream<LocationData> listenToLocationChanges() {
-    return _location.onLocationChanged;
+    return _location.onLocationChanged.map((location) => location);
   }
 
   @override
-  Future<List<FuelStationModel>> fetchNearbyFuelStations(
+  Future<Either<Failure, List<FuelStationModel>>> fetchNearbyFuelStations(
       double lat, double lon, double radius) async {
     final overpassUrl =
         "https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=fuel](around:$radius,$lat,$lon);out;";
@@ -35,7 +41,7 @@ class MapRepositoryImpl implements MapRepository {
       final response = await dioConsumer.get(overpassUrl);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return (data['elements'] as List)
+        return Right((data['elements'] as List)
             .where((element) =>
                 element.containsKey('lat') && element.containsKey('lon'))
             .map((element) => FuelStationModel.fromJson(element))
@@ -45,18 +51,19 @@ class MapRepositoryImpl implements MapRepository {
                   longitude: model.longitude,
                   address: model.address,
                 ))
-            .toList();
+            .toList());
       } else {
-        throw Exception(
-            "Failed to fetch fuel stations: ${response.statusCode}");
+        return Left(
+            Failure("Failed to fetch fuel stations: ${response.statusCode}"));
       }
     } catch (e) {
-      throw Exception("Error fetching fuel stations: $e");
+      return Left(Failure("Error fetching fuel stations: $e"));
     }
   }
 
   @override
-  Future<RouteResponseModel> getRoute(LatLng start, LatLng destination) async {
+  Future<Either<Failure, RouteResponseModel>> getRoute(
+      LatLng start, LatLng destination) async {
     final response = await dioConsumer.get(
       'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}',
     );
@@ -64,9 +71,9 @@ class MapRepositoryImpl implements MapRepository {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final routeModel = RouteResponseModel.fromJson(data);
-      return RouteResponseModel(points: routeModel.points);
+      return Right(RouteResponseModel(points: routeModel.points));
     } else {
-      throw Exception('Failed to fetch route: ${response.statusCode}');
+      return Left(Failure('Failed to fetch route: ${response.statusCode}'));
     }
   }
 }

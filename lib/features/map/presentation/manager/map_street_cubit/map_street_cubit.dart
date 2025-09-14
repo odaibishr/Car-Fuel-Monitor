@@ -24,12 +24,15 @@ class MapCubit extends Cubit<MapState> {
     emit(MapLoading());
     try {
       final location = await mapRepository.getCurrentLocation();
-      emit(MapLocationLoaded(location: location));
+      location.fold((failure) => emit(MapError(message: failure.errorMessage)),
+          (location) {
+        emit(MapLocationLoaded(location: location));
 
-      addMarker(
-        LatLng(location.latitude!, location.longitude!),
-        isCurrentLocation: true,
-      );
+        addMarker(
+          LatLng(location.latitude!, location.longitude!),
+          isCurrentLocation: true,
+        );
+      });
       await fetchNearbyFuelStations();
     } catch (e) {
       emit(MapError(message: e.toString()));
@@ -49,7 +52,7 @@ class MapCubit extends Cubit<MapState> {
 
       emit(MapLocationLoaded(
         location: currentState.location,
-        fuelStations: stations,
+        fuelStations: stations.fold((failure) => [], (stations) => stations),
         markers: currentState.markers,
         routePoints: currentState.routePoints,
       ));
@@ -119,7 +122,7 @@ class MapCubit extends Cubit<MapState> {
         location: currentState.location,
         fuelStations: currentState.fuelStations,
         markers: currentState.markers,
-        routePoints: route.points,
+        routePoints: route.fold((failure) => [], (route) => route.points),
       ));
     } catch (e) {
       emit(MapError(message: e.toString()));
