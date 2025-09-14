@@ -3,8 +3,6 @@ import 'package:car_monitor/core/utils/app_route.dart';
 import 'package:car_monitor/features/app/presentation/manager/bottom_nav_cubit/bottom_nav_cubit.dart';
 import 'package:car_monitor/features/home/data/repos/fuel_repo_impl.dart';
 import 'package:car_monitor/features/home/presentation/manager/fuel_cubit/fuel_cubit.dart';
-import 'package:car_monitor/features/map/data/repos/map_repo_impl.dart';
-import 'package:car_monitor/features/map/presentation/manager/map_street_cubit/map_street_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -40,20 +38,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => BottomNavCubit(),
         ),
-<<<<<<< HEAD
-        // BlocProvider(
-        //     create: (context) => MapCubit(
-        //         mapRepository: di.getIt<MapRepository>(),
-        //         updateDistance: (double distance) {
-        //           log('Distance to nearest station: $distance km');
-        //         })),
-=======
-        BlocProvider(
-          create: (context) =>
-              MapStreetCubit(MapRepoImpl(DioConsumer(dio: Dio())))
-                ..getCurrentLocation()..getNearbyFuelStations(),
-        ),
->>>>>>> f6b0278cc2da0d80fd33ddb76eae8343a9fdd8a4
       ],
       child: MaterialApp.router(
         title: 'Car Fuel Monitor',
