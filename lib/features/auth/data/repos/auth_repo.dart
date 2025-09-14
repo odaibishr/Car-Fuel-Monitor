@@ -8,4 +8,5 @@ abstract class AuthRepo {
   Future<Either<Failure, UserModel>> signInWithEmailAndPassword(
       String email, String password);
   Future<void> signOut();
+  Future<Either<Failure, UserModel>> getCurrentUser();
 }
