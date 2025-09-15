@@ -1,3 +1,5 @@
+// In custom_text_feild.dart
+import 'package:car_monitor/core/theme/color_styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -5,12 +7,18 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final FormFieldValidator<String>? validator;
   final TextInputType keyboardType;
+  final IconData? icon;
+  final bool obscureText;
+  final Widget? suffixIcon;
 
   const CustomTextField({
     required this.controller,
     required this.hintText,
     this.validator,
     this.keyboardType = TextInputType.text,
+    this.icon,
+    this.obscureText = false,
+    this.suffixIcon,
     super.key,
   });
 
@@ -19,7 +27,8 @@ class CustomTextField extends StatelessWidget {
     final theme = Theme.of(context);
 
     return TextFormField(
-      cursorColor: theme.colorScheme.onSurface,
+      obscureText: obscureText,
+      cursorColor: ColorStyles.primaryColor,
       style: theme.textTheme.bodyLarge
           ?.copyWith(color: theme.colorScheme.onSurface),
       controller: controller,
@@ -30,21 +39,24 @@ class CustomTextField extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         hintText: hintText,
         hintStyle: theme.textTheme.bodyLarge?.copyWith(color: theme.hintColor),
+        prefixIcon:
+            icon != null ? Icon(icon, color: ColorStyles.primaryColor) : null,
+        suffixIcon: suffixIcon,
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.primary),
+          borderSide: const BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(8.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: theme.colorScheme.onSurface.withOpacity(.8)),
+          borderSide: const BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(8.0),
         ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.error),
-          borderRadius: BorderRadius.circular(8.0),
+        errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
         filled: true,
-        fillColor: theme.colorScheme.surface.withOpacity(0.8),
+        fillColor: Colors.grey[200],
+
       ),
     );
   }

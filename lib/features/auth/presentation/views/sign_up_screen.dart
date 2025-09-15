@@ -7,7 +7,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Sgin up'),
+        child: Text('Sign Up'),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:car_monitor/core/errors/failure.dart';
 import 'package:car_monitor/features/auth/data/models/user_model.dart';
 import 'package:car_monitor/features/auth/data/repos/auth_repo.dart';
@@ -12,21 +14,46 @@ class AuthRepoImpl implements AuthRepo {
       String email, String password) async {
     try {
       final response = await supabaseClient.auth
-          .signInWithPassword(email: email, password: password);
+          .signInWithPassword(email: email.trim(), password: password);
+
       if (response.user == null) {
-        return Left(Failure('Sign in Failed'));
+        return Left(Failure(
+            'فشل تسجيل الدخول. يرجى التحقق من البريد الإلكتروني وكلمة المرور.'));
       }
 
-      final userData = supabaseClient.auth.currentUser;
+      final userData = response.user;
+
+      if (userData == null || userData.email == null) {
+        return Left(
+            Failure('بيانات المستخدم غير متوفرة. يرجى المحاولة مرة أخرى.'));
+      }
+
+      if (userData.userMetadata == null ||
+          userData.userMetadata!['name'] == null ||
+          userData.userMetadata!['phone'] == null) {
+        return Left(Failure(
+            'بيانات الملف الشخصي غير مكتملة. يرجى التواصل مع الدعم الفني.'));
+      }
 
       return Right(UserModel(
-        id: userData!.id,
-        email: response.user!.email!,
+        id: userData.id,
+        email: userData.email!,
         name: userData.userMetadata!['name'] as String,
         phone: userData.userMetadata!['phone'] as String,
       ));
+    } on AuthException catch (e) {
+      String errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
+      if (e.message.contains('Invalid login credentials')) {
+        errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+      } else if (e.message.contains('Email not confirmed')) {
+        errorMessage = 'الرجاء تأكيد بريدك الإلكتروني أولا';
+      } else if (e.message.contains('Network')) {
+        errorMessage = 'خطأ في الاتصال بالإنترنت. يرجى التحقق من اتصالك';
+      }
+      return Left(Failure(errorMessage));
     } catch (e) {
-      return Left(Failure(e.toString()));
+      // Handle any other errors
+      return Left(Failure('حدث خطأ غير متوقع: ${e.toString()}'));
     }
   }
 
@@ -48,6 +75,7 @@ class AuthRepoImpl implements AuthRepo {
           email: email,
           data: {'name': name, 'phone': phone});
 
+      log(response.toString());
       if (response.user == null) {
         return Left(Failure('Sign up Failed'));
       }
