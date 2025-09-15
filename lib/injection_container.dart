@@ -22,7 +22,7 @@ void init() {
       () => AuthRepoImpl(getIt<SupabaseClient>()));
 
   getIt.registerLazySingleton<FuelRepo>(
-      () => FuelRepoImpl(getIt<DioConsumer>()));
+      () => FuelRepoImpl(getIt<SupabaseClient>()));
 
   getIt.registerLazySingleton<MapRepository>(
       () => MapRepositoryImpl(getIt<DioConsumer>()));
