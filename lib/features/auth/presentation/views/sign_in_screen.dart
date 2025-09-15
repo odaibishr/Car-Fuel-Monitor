@@ -1,13 +1,17 @@
+import 'dart:developer';
+
 import 'package:car_monitor/car_assets.dart';
 import 'package:car_monitor/components/custom_text_feild.dart';
 import 'package:car_monitor/core/theme/color_styles.dart';
+import 'package:car_monitor/core/utils/app_route.dart';
+import 'package:car_monitor/core/widgets/custom_button.dart';
 import 'package:car_monitor/core/widgets/custom_loader.dart';
 import 'package:car_monitor/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
-import 'package:car_monitor/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:car_monitor/features/auth/presentation/views/widgets/password_text_field.dart';
 import 'package:car_monitor/features/auth/presentation/views/widgets/text_field_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -55,6 +59,11 @@ class _SignInScreenState extends State<SignInScreen>
             _emailController.text.trim(),
             _passwordController.text,
           );
+
+      if (context.read<AuthCubit>().state is AuthLoading) {
+        log(context.read<AuthCubit>().state.toString());
+        context.go(AppRoute.bottomNavRoute);
+      }
     }
   }
 
@@ -192,27 +201,9 @@ class _SignInScreenState extends State<SignInScreen>
                         const SizedBox(height: 24),
 
                         // Sign In Button
-                        SizedBox(
-                          height: 45,
-                          child: ElevatedButton(
-                            onPressed: _submitForm,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorStyles.primaryColor,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: const Text(
-                              'تسجيل الدخول',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                        CustomButton(
+                          onPressed: _submitForm,
+                          text: 'تسجيل الدخول',
                         ),
                         const SizedBox(height: 24),
 
@@ -228,12 +219,7 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignUpScreen(),
-                                  ),
-                                );
+                                GoRouter.of(context).push(AppRoute.signUpRoute);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
