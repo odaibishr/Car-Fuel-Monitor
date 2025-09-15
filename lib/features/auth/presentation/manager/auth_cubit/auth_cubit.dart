@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:car_monitor/core/errors/error_model.dart';
 import 'package:car_monitor/features/auth/data/models/user_model.dart';
 import 'package:car_monitor/features/auth/data/repos/auth_repo.dart';
+import 'package:flutter/material.dart';
 
 part 'auth_state.dart';
 
