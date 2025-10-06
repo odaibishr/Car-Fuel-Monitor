@@ -46,7 +46,7 @@ OPENROUTESERVICE_API_KEY=your_ors_api_key
 ## Setup and Installation
 1. Clone the repository
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/odaibishr/Car-Fuel-Monitor.git
    cd car_monitor
    ```
 2. Create and fill your `.env` file (see Environment Variables section).
