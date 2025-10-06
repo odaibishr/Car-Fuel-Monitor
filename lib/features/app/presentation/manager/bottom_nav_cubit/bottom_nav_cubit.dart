@@ -9,7 +9,9 @@ class BottomNavCubit extends Cubit<BottomNavState> {
   final PageController pageController = PageController();
 
   void changeBottomNav(int index) {
+    if (index < 0 || index >= 4) return; // We have 4 pages (0-3)
     if (index == state.selectedIndex) return;
+
     emit(state.copyWith(selectedIndex: index));
     pageController.animateToPage(
       index,
@@ -18,13 +20,9 @@ class BottomNavCubit extends Cubit<BottomNavState> {
     );
   }
 
-  void updateNearestDistance(double distanceKm) {
-    emit(state.copyWith(nearestDistance: distanceKm));
-  }
-
   @override
   Future<void> close() {
-    pageController.dispose();
+    pageController.dispose(); // Dispose the controller when cubit is closed
     return super.close();
   }
 }

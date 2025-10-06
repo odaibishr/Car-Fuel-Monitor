@@ -27,38 +27,51 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(flex: 2),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.asset(
-                    Assets.assetsAssetsLogo,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Calculate available height after accounting for safe area and padding
+          final availableHeight = constraints.maxHeight - 32; // 16px padding top and bottom
+          
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: availableHeight * 0.5, // Take 50% of available height
+                        child: Image.asset(
+                          Assets.assetsAssetsLogo,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: const TextSpalshInfo(
+                            title: "تحكم ذكي في وقودك",
+                            description:
+                                '''وفر وقتك وأموالك مع  محفظتك الذكية لإدارة استهلاك الوقود بكفاءة.
+تابع عمليات التعبئة، حدد أقرب محطة، واحصل على تنبيهات ذكية عند انخفاض مستوى الوقود''',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
               ),
-              const Spacer(flex: 2),
-              const TextSpalshInfo(
-                title: "تحكم ذكي في وقودك",
-                description:
-                    '''وفر وقتك وأموالك مع  محفظتك الذكية لإدارة استهلاك الوقود بكفاءة.
-تابع عمليات التعبئة، حدد أقرب محطة، واحصل على تنبيهات ذكية عند انخفاض مستوى الوقود''',
-                // button: Transform.scale(
-                //   scale: 1.8,
-                //   child: const CustomLoader(),
-                // ),
-                // press: () {},
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

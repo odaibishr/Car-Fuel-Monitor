@@ -1,3 +1,4 @@
+import 'package:car_monitor/car_assets.dart';
 import 'package:car_monitor/features/app/presentation/manager/bottom_nav_cubit/bottom_nav_cubit.dart';
 import 'package:car_monitor/features/home/presentation/views/home_screen.dart';
 import 'package:car_monitor/features/map/presentation/views/map_screen.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../car_assets.dart';
 import '../../../../screens/notification_screen.dart';
 import '../../../../screens/porfile_screen.dart';
 import '../../../../core/theme/color_styles.dart';
@@ -31,9 +31,7 @@ class BottomNavBar extends StatelessWidget {
             children: [
               const HomeScreen(),
               const NotificationScreen(),
-              MapScreen(
-                updateDistance: (double p1) {},
-              ),
+              MapScreen(updateDistance: (double p1) {}),
               const ProfileScreen(),
             ],
           ),
@@ -44,8 +42,9 @@ class BottomNavBar extends StatelessWidget {
               children: [
                 CustomPaint(
                   size: Size(size.width, height + 7),
-                  painter:
-                      BottomNavCurvePainter(backgroundColor: backgroundColor),
+                  painter: BottomNavCurvePainter(
+                    backgroundColor: backgroundColor,
+                  ),
                 ),
                 Center(
                   heightFactor: 0.4,
@@ -119,8 +118,10 @@ class BottomNavBar extends StatelessWidget {
 }
 
 class BottomNavCurvePainter extends CustomPainter {
-  BottomNavCurvePainter(
-      {this.backgroundColor = Colors.black, this.insetRadius = 38});
+  BottomNavCurvePainter({
+    this.backgroundColor = Colors.black,
+    this.insetRadius = 38,
+  });
 
   final Color backgroundColor;
   final double insetRadius;
@@ -136,16 +137,31 @@ class BottomNavCurvePainter extends CustomPainter {
     double insetCurveEndX = size.width / 2 + insetRadius;
     double transitionToInsetCurveWidth = size.width * .05;
 
-    path.quadraticBezierTo(size.width * 0.20, 0,
-        insetCurveBeginnningX - transitionToInsetCurveWidth, 0);
     path.quadraticBezierTo(
-        insetCurveBeginnningX, 0, insetCurveBeginnningX, insetRadius / 2);
+      size.width * 0.20,
+      0,
+      insetCurveBeginnningX - transitionToInsetCurveWidth,
+      0,
+    );
+    path.quadraticBezierTo(
+      insetCurveBeginnningX,
+      0,
+      insetCurveBeginnningX,
+      insetRadius / 2,
+    );
 
-    path.arcToPoint(Offset(insetCurveEndX, insetRadius / 2),
-        radius: const Radius.circular(10.0), clockwise: false);
+    path.arcToPoint(
+      Offset(insetCurveEndX, insetRadius / 2),
+      radius: const Radius.circular(10.0),
+      clockwise: false,
+    );
 
     path.quadraticBezierTo(
-        insetCurveEndX, 0, insetCurveEndX + transitionToInsetCurveWidth, 0);
+      insetCurveEndX,
+      0,
+      insetCurveEndX + transitionToInsetCurveWidth,
+      0,
+    );
     path.quadraticBezierTo(size.width * 0.80, 0, size.width, 12);
     path.lineTo(size.width, size.height + 56);
     path.lineTo(0, size.height + 56);

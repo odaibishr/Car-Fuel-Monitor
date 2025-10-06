@@ -33,7 +33,10 @@ class MapRepositoryImpl implements MapRepository {
 
   @override
   Future<Either<Failure, List<FuelStationModel>>> fetchNearbyFuelStations(
-      double lat, double lon, double radius) async {
+    double lat,
+    double lon,
+    double radius,
+  ) async {
     final overpassUrl =
         "https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=fuel](around:$radius,$lat,$lon);out;";
 
@@ -41,20 +44,27 @@ class MapRepositoryImpl implements MapRepository {
       final response = await dioConsumer.get(overpassUrl);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return Right((data['elements'] as List)
-            .where((element) =>
-                element.containsKey('lat') && element.containsKey('lon'))
-            .map((element) => FuelStationModel.fromJson(element))
-            .map((model) => FuelStationModel(
+        return Right(
+          (data['elements'] as List)
+              .where(
+                (element) =>
+                    element.containsKey('lat') && element.containsKey('lon'),
+              )
+              .map((element) => FuelStationModel.fromJson(element))
+              .map(
+                (model) => FuelStationModel(
                   name: model.name,
                   latitude: model.latitude,
                   longitude: model.longitude,
                   address: model.address,
-                ))
-            .toList());
+                ),
+              )
+              .toList(),
+        );
       } else {
         return Left(
-            Failure("Failed to fetch fuel stations: ${response.statusCode}"));
+          Failure("Failed to fetch fuel stations: ${response.statusCode}"),
+        );
       }
     } catch (e) {
       return Left(Failure("Error fetching fuel stations: $e"));
@@ -63,7 +73,9 @@ class MapRepositoryImpl implements MapRepository {
 
   @override
   Future<Either<Failure, RouteResponseModel>> getRoute(
-      LatLng start, LatLng destination) async {
+    LatLng start,
+    LatLng destination,
+  ) async {
     final response = await dioConsumer.get(
       'https://api.openrouteservice.org/v2/directions/driving-car?api_key=$orsApiKey&start=${start.longitude},${start.latitude}&end=${destination.longitude},${destination.latitude}',
     );

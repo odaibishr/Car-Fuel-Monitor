@@ -2,8 +2,8 @@ import 'package:car_monitor/core/utils/app_route.dart';
 import 'package:car_monitor/features/app/presentation/manager/bottom_nav_cubit/bottom_nav_cubit.dart';
 import 'package:car_monitor/features/auth/data/repos/auth_repo.dart';
 import 'package:car_monitor/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
-import 'package:car_monitor/features/home/data/repos/fuel_repo.dart';
-import 'package:car_monitor/features/home/presentation/manager/fuel_cubit/fuel_cubit.dart';
+import 'package:car_monitor/features/map/data/repos/map_repo.dart';
+import 'package:car_monitor/features/map/presentation/manager/map_street_cubit/map_street_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,14 +34,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => BottomNavCubit()),
+        BlocProvider(create: (context) => AuthCubit(di.getIt<AuthRepo>())),
         BlocProvider(
-          create: (context) => FuelCubit(di.getIt<FuelRepo>())..getFuelData(),
-        ),
-        BlocProvider(
-          create: (context) => BottomNavCubit(),
-        ),
-        BlocProvider(
-          create: (context) => AuthCubit(di.getIt<AuthRepo>()),
+          create: (context) =>
+              MapCubit(di.getIt<MapRepository>(), (distance) {})
+                ..getCurrentLocation()
+                ..fetchNearbyFuelStations(),
         ),
       ],
       child: MaterialApp.router(
@@ -53,13 +52,12 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale("ar", "AE"),
-        ],
+        supportedLocales: const [Locale("ar", "AE")],
         theme: ThemeData(
           fontFamily: "Cairo",
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: ColorStyles.primaryColor),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: ColorStyles.primaryColor,
+          ),
           useMaterial3: true,
         ),
       ),

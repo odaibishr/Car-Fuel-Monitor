@@ -17,22 +17,23 @@ class MapCubit extends Cubit<MapState> {
   StreamSubscription<LocationData>? _locationSubscription;
   final Function(double) updateDistance;
 
-  MapCubit({required this.mapRepository, required this.updateDistance})
-      : super(MapInitial());
+  MapCubit(this.mapRepository, this.updateDistance) : super(MapInitial());
 
   Future<void> getCurrentLocation() async {
     emit(MapLoading());
     try {
       final location = await mapRepository.getCurrentLocation();
-      location.fold((failure) => emit(MapError(message: failure.errorMessage)),
-          (location) {
-        emit(MapLocationLoaded(location: location));
+      location.fold(
+        (failure) => emit(MapError(message: failure.errorMessage)),
+        (location) {
+          emit(MapLocationLoaded(location: location));
 
-        addMarker(
-          LatLng(location.latitude!, location.longitude!),
-          isCurrentLocation: true,
-        );
-      });
+          addMarker(
+            LatLng(location.latitude!, location.longitude!),
+            isCurrentLocation: true,
+          );
+        },
+      );
       await fetchNearbyFuelStations();
     } catch (e) {
       emit(MapError(message: e.toString()));
@@ -50,12 +51,14 @@ class MapCubit extends Cubit<MapState> {
         5000, // 5km radius
       );
 
-      emit(MapLocationLoaded(
-        location: currentState.location,
-        fuelStations: stations.fold((failure) => [], (stations) => stations),
-        markers: currentState.markers,
-        routePoints: currentState.routePoints,
-      ));
+      emit(
+        MapLocationLoaded(
+          location: currentState.location,
+          fuelStations: stations.fold((failure) => [], (stations) => stations),
+          markers: currentState.markers,
+          routePoints: currentState.routePoints,
+        ),
+      );
 
       _navigateToNearestFuelStation();
     } catch (e) {
@@ -81,7 +84,9 @@ class MapCubit extends Cubit<MapState> {
   }
 
   FuelStationModel? _getNearestFuelStation(
-      LatLng userLocation, List<FuelStationModel> stations) {
+    LatLng userLocation,
+    List<FuelStationModel> stations,
+  ) {
     FuelStationModel? nearestStation;
     double minDistance = double.infinity;
 
@@ -113,17 +118,21 @@ class MapCubit extends Cubit<MapState> {
 
     try {
       final start = LatLng(
-          currentState.location.latitude!, currentState.location.longitude!);
+        currentState.location.latitude!,
+        currentState.location.longitude!,
+      );
       final route = await mapRepository.getRoute(start, destination);
 
       addMarker(destination, isCurrentLocation: false);
 
-      emit(MapLocationLoaded(
-        location: currentState.location,
-        fuelStations: currentState.fuelStations,
-        markers: currentState.markers,
-        routePoints: route.fold((failure) => [], (route) => route.points),
-      ));
+      emit(
+        MapLocationLoaded(
+          location: currentState.location,
+          fuelStations: currentState.fuelStations,
+          markers: currentState.markers,
+          routePoints: route.fold((failure) => [], (route) => route.points),
+        ),
+      );
     } catch (e) {
       emit(MapError(message: e.toString()));
     }
@@ -144,25 +153,30 @@ class MapCubit extends Cubit<MapState> {
       ),
     );
 
-    emit(MapLocationLoaded(
-      location: currentState.location,
-      fuelStations: currentState.fuelStations,
-      markers: [...currentState.markers, newMarker],
-      routePoints: currentState.routePoints,
-    ));
+    emit(
+      MapLocationLoaded(
+        location: currentState.location,
+        fuelStations: currentState.fuelStations,
+        markers: [...currentState.markers, newMarker],
+        routePoints: currentState.routePoints,
+      ),
+    );
   }
 
   void startListeningToLocation() {
-    _locationSubscription =
-        mapRepository.listenToLocationChanges().listen((newLocation) {
+    _locationSubscription = mapRepository.listenToLocationChanges().listen((
+      newLocation,
+    ) {
       final currentState = state;
       if (currentState is MapLocationLoaded) {
-        emit(MapLocationLoaded(
-          location: newLocation,
-          fuelStations: currentState.fuelStations,
-          markers: currentState.markers,
-          routePoints: currentState.routePoints,
-        ));
+        emit(
+          MapLocationLoaded(
+            location: newLocation,
+            fuelStations: currentState.fuelStations,
+            markers: currentState.markers,
+            routePoints: currentState.routePoints,
+          ),
+        );
       }
     });
   }

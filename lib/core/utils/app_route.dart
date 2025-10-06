@@ -21,8 +21,10 @@ class AppRoute {
     initialLocation: splashRoute,
     redirect: (context, state) {
       final authState = AuthCubit(di.getIt<AuthRepo>()).state;
-      if (authState is AuthAuthenticated) {
-        return homeRoute;
+      final isSplash = state.uri.path == splashRoute;
+
+      if (authState is AuthAuthenticated && isSplash) {
+        return bottomNavRoute;
       }
       return null;
     },

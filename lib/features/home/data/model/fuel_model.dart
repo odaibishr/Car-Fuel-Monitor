@@ -8,10 +8,10 @@ class FuelModel {
 
   factory FuelModel.fromJson(Map<String, dynamic> json) {
     return FuelModel(
-      id: json['id'],
-      createdAt: json['created_at'],
-      letters: json['leter'],
-      level: json['level'],
+      id: json['id'] as int?,
+      createdAt: json['created_at'] as String?,
+      letters: (json['leter'] as num?)?.toDouble(),
+      level: (json['level'] as num?)?.toDouble(),
     );
   }
 

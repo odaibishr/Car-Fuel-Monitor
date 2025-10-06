@@ -14,12 +14,17 @@ class FuelRepoImpl implements FuelRepo {
   @override
   Future<Either<Failure, FuelModel>> getFuelData() async {
     try {
-      final response =
-          await supabaseClient.from("fuel_tanks").select().single();
+      final response = await supabaseClient
+          .from("fuel_tanks")
+          .select()
+          .limit(1)
+          .single(); // <-- يرجع Map<String, dynamic> بدل List
+
       log(response.toString());
       return right(FuelModel.fromJson(response));
     } catch (e) {
       return left(Failure(e.toString()));
     }
   }
+
 }
